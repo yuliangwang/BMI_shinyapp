@@ -4,27 +4,45 @@ library(shiny)
 bmi_class_original<-function(weight,height){
     ###This function calculates the Body Mass Index (BMI) based on the original formula and classify
     ###the resulting BMI into underwegith, normal, overweight and obese.
+    ###In addition, it will calculate weight gain/loss necessary to achieve target BMI:
+    ### 18.5 for those underweight, and 24.99 for whose overweight or obese.
     weight<-as.numeric(weight)
     height<-as.numeric(height)
     bmi<-weight/(height/100)^2
-    if(bmi <18.5){ weightAns<-"You are underweight" }
-    else if (bmi >=18.5 & bmi<=24.99){weightAns<-"You are of normal weight"}
-    else if (bmi >24.99 & bmi<=29.99){weightAns<-"You are overweight"}
-    else if (bmi >=30){weightAns<-"You are obese"}
+    if(bmi <18.5){ 
+        target_weight<- 18.5*(height/100)^2
+        weightAns<-paste("You are underweight. You may try to gain ",format(target_weight-weight,digits=2)," kg.",sep="") }
+    else if (bmi >=18.5 & bmi<=24.99){
+        weightAns<-"You are of normal weight. Stay in shape."}
+    else if (bmi >24.99 & bmi<=29.99){
+        target_weight<- 24.99*(height/100)^2
+        weightAns<-paste("You are overweight. You may try to lose ",format(weight - target_weight,digits=2)," kg.",sep="")}
+    else if (bmi >=30){
+        target_weight<- 24.99*(height/100)^2
+        weightAns<-paste("You are obese. You may try to lose ",format(weight - target_weight,digits=2)," kg.",sep="")}
     bmi_class<-data.frame(bmi=bmi,class=weightAns)        
 }
 
 bmi_class_new<-function(weight,height){
     ###This function calculates the Body Mass Index (BMI) based on the nwe formula and classify
     ###the resulting BMI into underwegith, normal, overweight and obese.
+    ###In addition, it will calculate weight gain/loss necessary to achieve target BMI:
+    ### 18.5 for those underweight, and 24.99 for whose overweight or obese.
         weight<-as.numeric(weight)
         height<-as.numeric(height)
         bmi<-1.3*weight/(height/100)^2.5
-        if(bmi <18.5){ weightAns<-"You are underweight" }
-        else if (bmi >=18.5 & bmi<=24.99){weightAns<-"You are of normal weight"}
-        else if (bmi >24.99 & bmi<=29.99){weightAns<-"You are overweight"}
-        else if (bmi >=30){weightAns<-"You are obese"}
-        bmi_class<-data.frame(bmi=bmi,class=weightAns)        
+        if(bmi <18.5){ 
+            target_weight<- 18.5*(height/100)^2.5
+            weightAns<-paste("You are underweight. You may try to gain ",format(target_weight-weight,digits=2)," kg.",sep="") }
+        else if (bmi >=18.5 & bmi<=24.99){
+            weightAns<-"You are of normal weight. Stay in shape."}
+        else if (bmi >24.99 & bmi<=29.99){
+            target_weight<- 24.99*(height/100)^2.5/1.3
+            weightAns<-paste("You are overweight. You may try to lose ",format(weight - target_weight,digits=2)," kg.",sep="")}
+        else if (bmi >=30){
+            target_weight<- 24.99*(height/100)^2.5/1.3
+            weightAns<-paste("You are obese. You may try to lose ",format(weight - target_weight,digits=2)," kg.",sep="")}
+        bmi_class<-data.frame(bmi=bmi,class=weightAns)         
 }
 
 shinyServer(
